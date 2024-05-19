@@ -13,7 +13,8 @@ public class AuthService {
 
 	@Autowired
 	RevenumonsterServiceConfiguration.ApiGateway revenumonsterApiService;
-	
+	@Autowired
+	RevenumosterService revenumosterService;
     public Message<String> authenticateNewRequest(Message<String> message) throws Exception {
     	
     	if(RevenumosterService.getAccessToken() == null) {
@@ -25,9 +26,9 @@ public class AuthService {
     		System.out.println("Already Have Access Token: " + RevenumosterService.getAccessToken());
     	}
     	
-        RevenumosterService.generateNewNonce();
-        RevenumosterService.generateTimestamp();
-        RevenumosterService.generateRequestSignature(message.getPayload().toString());
+    	revenumosterService.generateNewNonce();
+        revenumosterService.generateTimestamp();
+        revenumosterService.generateRequestSignature(message.getPayload().toString());
         return message;
     }
 }

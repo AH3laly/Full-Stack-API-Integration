@@ -44,7 +44,7 @@ public class RevenumosterService {
 		RevenumosterService.refreshToken = refreshToken;
 	}
 	
-	public static long generateTimestamp() {
+	public long generateTimestamp() {
 		timestamp = System.currentTimeMillis() / 1000L;
 		return timestamp;
 	}
@@ -53,7 +53,7 @@ public class RevenumosterService {
 		return timestamp;
 	}
 	
-	public static String generateNewNonce() {
+	public String generateNewNonce() {
 		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
@@ -73,7 +73,7 @@ public class RevenumosterService {
 		return Base64.getEncoder().encodeToString(request.getBytes());
 	}
 	
-	public static String generateRequestSignature(String messagePaload) throws Exception {
+	public String generateRequestSignature(String messagePaload) throws Exception {
 		
 		StringBuilder messageBytes = new StringBuilder();
 		messageBytes.append("data=").append(preparePayloadForSignature(messagePaload))
@@ -83,7 +83,7 @@ public class RevenumosterService {
 			.append("&signType=sha256")
 			.append("&timestamp=").append(getTimestamp());
 		
-		requestSignature = RSASignatureUtil.SignMessage(messageBytes.toString());
+		requestSignature = RSASignatureUtil.SignMessage(messageBytes.toString(), properties.getRsaPrivateKeyFilePath());
 
 		return requestSignature;
 	}
