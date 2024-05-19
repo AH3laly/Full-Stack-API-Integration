@@ -75,6 +75,8 @@ public class RevenumosterService {
     
     public String generateRequestSignature(String messagePaload) throws Exception {
         
+    	// This content is necessary to be precise,
+    	// Only single wrong character would change the signature, and break the authentication.
         StringBuilder messageBytes = new StringBuilder();
         messageBytes.append("data=").append(preparePayloadForSignature(messagePaload))
             .append("&method=post")

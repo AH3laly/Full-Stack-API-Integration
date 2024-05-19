@@ -21,6 +21,7 @@ public class RSASignatureUtil {
         return Base64.getEncoder().encodeToString(signature);
     }
 
+    // Take care of Key format, It should be PKCS1
     public static PrivateKey loadPKCS1PrivateKey(String filePath) throws Exception {
         PemReader pemReader = new PemReader(new FileReader(filePath));
         byte[] pemContent = pemReader.readPemObject().getContent();

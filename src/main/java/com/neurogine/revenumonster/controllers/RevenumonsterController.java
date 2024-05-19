@@ -22,7 +22,7 @@ public class RevenumonsterController {
 
     @Autowired
     RevenumonsterServiceConfiguration.ApiGateway revenumonsterApiService;
-    
+
     @GetMapping("/topup")
     public ResponseEntity<?> topup(HttpServletRequest request,
             @RequestParam("amount") Integer amount) {

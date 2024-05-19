@@ -24,6 +24,10 @@ public class TopupRequest {
         this.amount = amount;
     }
     
+    // IMPORTANT
+    // This content should be sorted by JSON key and compacted, according to the Documentation.
+    // I did this manually for testing purposes,
+    // But for real-life applications, it should be dynamically processed.
     @Override
     public String toString() {
         return "{\"amount\":" + getAmount() + ",\"redirect\":\"" + getRedirect() + "\"}";
