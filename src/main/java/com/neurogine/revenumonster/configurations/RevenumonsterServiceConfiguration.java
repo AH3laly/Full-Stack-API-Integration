@@ -11,6 +11,7 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.http.dsl.Http;
 import org.springframework.integration.http.outbound.HttpRequestExecutingMessageHandler;
+import org.springframework.messaging.Message;
 
 import com.neurogine.revenumonster.messages.AuthRequest;
 import com.neurogine.revenumonster.messages.AuthResponse;
@@ -26,6 +27,8 @@ public class RevenumonsterServiceConfiguration {
 		@Gateway(requestChannel = "authChannel")
 		AuthResponse authenticate(AuthRequest request);
 
+		@Gateway(requestChannel = "topupChannel")
+		Message<String> topup(Message<String> message);
 	}
 	
 	@Bean
@@ -52,5 +55,29 @@ public class RevenumonsterServiceConfiguration {
         RevenumosterService.setAccessToken(response.getAccessToken());
     	RevenumosterService.setRefreshToken(response.getRefreshToken());
         return response;
+    }
+	
+	public HttpRequestExecutingMessageHandler topup() {
+        return Http.outboundGateway(RevenumosterService.SERVICE_URL)
+                .httpMethod(HttpMethod.POST)
+                .mappedRequestHeaders("Content-Type", "Authorization", "X-Nonce-Str", "X-Signature", "X-Timestamp")
+                .expectedResponseType(String.class)
+                .get();
+    }
+
+	@Bean
+    public IntegrationFlow topupOutboundFlow() {
+
+        return IntegrationFlows.from("topupChannel")
+        		.handle("configService", "configure")
+        		.enrichHeaders(headerEnricherSpec -> headerEnricherSpec
+    				 .header("Content-Type", "application/json")
+					 .headerFunction("Authorization", message -> "Bearer " + RevenumosterService.getAccessToken()) 
+					 .headerFunction("X-Signature", message -> "sha256 " + RevenumosterService.getRequestSignature())
+					 .headerFunction("X-Nonce-Str", message -> RevenumosterService.getNonce())
+					 .headerFunction("X-Timestamp", message -> RevenumosterService.getTimestamp().toString())
+				)
+        		.handle(topup())
+        		.get();
     }
 }
