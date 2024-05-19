@@ -14,7 +14,7 @@ public class AuthService {
 	@Autowired
 	RevenumonsterServiceConfiguration.ApiGateway revenumonsterApiService;
 	
-    public Message<String> authenticateNewRequest(Message<String> message) {
+    public Message<String> authenticateNewRequest(Message<String> message) throws Exception {
     	
     	if(RevenumosterService.getAccessToken() == null) {
     		AuthResponse authResponse = revenumonsterApiService.authenticate(new AuthRequest("client_credentials"));

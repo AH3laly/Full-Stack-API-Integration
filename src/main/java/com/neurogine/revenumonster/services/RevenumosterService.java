@@ -3,6 +3,8 @@ package com.neurogine.revenumonster.services;
 import java.util.Base64;
 import java.util.Random;
 
+import com.neurogine.revenumonster.utils.RSASignatureUtil;
+
 public class RevenumosterService {
 
 	public static final String AUTH_URL = "https://sb-oauth.revenuemonster.my/v1/token";
@@ -65,7 +67,7 @@ public class RevenumosterService {
 		return Base64.getEncoder().encodeToString(request.getBytes());
 	}
 	
-	public static String generateRequestSignature(String messagePaload) {
+	public static String generateRequestSignature(String messagePaload) throws Exception {
 		
 		StringBuilder messageBytes = new StringBuilder();
 		messageBytes.append("data=").append(preparePayloadForSignature(messagePaload))
@@ -75,7 +77,7 @@ public class RevenumosterService {
 			.append("&signType=sha256")
 			.append("&timestamp=").append(getTimestamp());
 		
-		//requestSignature = RSASignatureUtil.SignMessage(messageBytes.toString());
+		requestSignature = RSASignatureUtil.SignMessage(messageBytes.toString());
 
 		return requestSignature;
 	}
