@@ -22,46 +22,46 @@ import com.neurogine.revenumonster.services.RevenumosterService;
 @EnableIntegration
 public class RevenumonsterServiceConfiguration {
 
-	@Autowired
-	RevenumosterService revenumosterService;
+    @Autowired
+    RevenumosterService revenumosterService;
 
-	@MessagingGateway
-	public interface ApiGateway {
-		
-		@Gateway(requestChannel = "authChannel")
-		AuthResponse authenticate(AuthRequest request);
+    @MessagingGateway
+    public interface ApiGateway {
+        
+        @Gateway(requestChannel = "authChannel")
+        AuthResponse authenticate(AuthRequest request);
 
-		@Gateway(requestChannel = "topupChannel")
-		Message<String> topup(Message<String> message);
-	}
-	
-	@Bean
-	public HttpRequestExecutingMessageHandler authenticate() {
+        @Gateway(requestChannel = "topupChannel")
+        Message<String> topup(Message<String> message);
+    }
+    
+    @Bean
+    public HttpRequestExecutingMessageHandler authenticate() {
         return Http.outboundGateway(RevenumosterService.AUTH_URL)
                 .httpMethod(HttpMethod.POST)
                 .expectedResponseType(AuthResponse.class)
                 .get();
     }
-	
-	@Bean
+    
+    @Bean
     public IntegrationFlow authenticateOutboundFlow() {
         return IntegrationFlows.from("authChannel")
-    		.enrichHeaders(header -> header
-				.header("Content-Type", "application/json")
-				.header("Authorization", "Basic " + revenumosterService.getAuthToken()))
-    		.handle(authenticate())
-    		.channel("authenticateOutput")
+            .enrichHeaders(header -> header
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Basic " + revenumosterService.getAuthToken()))
+            .handle(authenticate())
+            .channel("authenticateOutput")
             .get();
     }
-	
-	@ServiceActivator(inputChannel = "authenticateOutput")
+    
+    @ServiceActivator(inputChannel = "authenticateOutput")
     public AuthResponse authenticateOutput(AuthResponse response) {
         RevenumosterService.setAccessToken(response.getAccessToken());
-    	RevenumosterService.setRefreshToken(response.getRefreshToken());
+        RevenumosterService.setRefreshToken(response.getRefreshToken());
         return response;
     }
-	
-	public HttpRequestExecutingMessageHandler topup() {
+    
+    public HttpRequestExecutingMessageHandler topup() {
         return Http.outboundGateway(RevenumosterService.SERVICE_URL)
                 .httpMethod(HttpMethod.POST)
                 .mappedRequestHeaders("Content-Type", "Authorization", "X-Nonce-Str", "X-Signature", "X-Timestamp")
@@ -69,19 +69,19 @@ public class RevenumonsterServiceConfiguration {
                 .get();
     }
 
-	@Bean
+    @Bean
     public IntegrationFlow topupOutboundFlow() {
 
         return IntegrationFlows.from("topupChannel")
-        		.handle("authService", "authenticateNewRequest")
-        		.enrichHeaders(headerEnricherSpec -> headerEnricherSpec
-    				 .header("Content-Type", "application/json")
-					 .headerFunction("Authorization", message -> "Bearer " + RevenumosterService.getAccessToken()) 
-					 .headerFunction("X-Signature", message -> "sha256 " + RevenumosterService.getRequestSignature())
-					 .headerFunction("X-Nonce-Str", message -> RevenumosterService.getNonce())
-					 .headerFunction("X-Timestamp", message -> RevenumosterService.getTimestamp().toString())
-				)
-        		.handle(topup())
-        		.get();
+                .handle("authService", "authenticateNewRequest")
+                .enrichHeaders(headerEnricherSpec -> headerEnricherSpec
+                     .header("Content-Type", "application/json")
+                     .headerFunction("Authorization", message -> "Bearer " + RevenumosterService.getAccessToken()) 
+                     .headerFunction("X-Signature", message -> "sha256 " + RevenumosterService.getRequestSignature())
+                     .headerFunction("X-Nonce-Str", message -> RevenumosterService.getNonce())
+                     .headerFunction("X-Timestamp", message -> RevenumosterService.getTimestamp().toString())
+                )
+                .handle(topup())
+                .get();
     }
 }

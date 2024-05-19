@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FullStackApiIntegrationApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FullStackApiIntegrationApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(FullStackApiIntegrationApplication.class, args);
+    }
 }

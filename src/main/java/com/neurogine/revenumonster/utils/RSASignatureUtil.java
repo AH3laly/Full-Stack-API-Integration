@@ -12,8 +12,8 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.util.io.pem.PemReader;
 
 public class RSASignatureUtil {
-	
-	private static String sign(String data, PrivateKey privateKey) throws Exception {
+    
+    private static String sign(String data, PrivateKey privateKey) throws Exception {
         Signature rsaSignature = Signature.getInstance("SHA256withRSA");
         rsaSignature.initSign(privateKey);
         rsaSignature.update(data.getBytes());
@@ -21,7 +21,7 @@ public class RSASignatureUtil {
         return Base64.getEncoder().encodeToString(signature);
     }
 
-	public static PrivateKey loadPKCS1PrivateKey(String filePath) throws Exception {
+    public static PrivateKey loadPKCS1PrivateKey(String filePath) throws Exception {
         PemReader pemReader = new PemReader(new FileReader(filePath));
         byte[] pemContent = pemReader.readPemObject().getContent();
         pemReader.close();
@@ -42,8 +42,8 @@ public class RSASignatureUtil {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePrivate(keySpec);
     }
-	
-	public static String SignMessage(String message, String privateKeyFilePath) throws Exception {
+    
+    public static String SignMessage(String message, String privateKeyFilePath) throws Exception {
             PrivateKey privateKey = loadPKCS1PrivateKey(privateKeyFilePath);
             String signature = RSASignatureUtil.sign(message, privateKey);
             return signature;

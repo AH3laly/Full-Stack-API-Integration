@@ -20,24 +20,24 @@ import com.neurogine.revenumonster.messages.TopupRequest;
 @RequestMapping("/api")
 public class RevenumonsterController {
 
-	@Autowired
-	RevenumonsterServiceConfiguration.ApiGateway revenumonsterApiService;
-	
-	@GetMapping("/topup")
+    @Autowired
+    RevenumonsterServiceConfiguration.ApiGateway revenumonsterApiService;
+    
+    @GetMapping("/topup")
     public ResponseEntity<?> topup(HttpServletRequest request,
-    		@RequestParam("amount") Integer amount) {
+            @RequestParam("amount") Integer amount) {
         try {
 
-        	TopupRequest topupRequest = new TopupRequest(50);
+            TopupRequest topupRequest = new TopupRequest(50);
 
-        	Message<String> requestMessage = MessageBuilder.withPayload(topupRequest.toString()).build();
+            Message<String> requestMessage = MessageBuilder.withPayload(topupRequest.toString()).build();
 
-        	Message<String> responseMessage = revenumonsterApiService.topup(requestMessage);
+            Message<String> responseMessage = revenumonsterApiService.topup(requestMessage);
 
-        	return new ResponseEntity<>(responseMessage.getPayload().toString(), HttpStatus.OK);
+            return new ResponseEntity<>(responseMessage.getPayload().toString(), HttpStatus.OK);
 
         } catch (Exception e) {
-        	return new ResponseEntity<>(new ApiResponse<String>(ApiResponse.STATUS.ERROR, e.getMessage(), ""), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse<String>(ApiResponse.STATUS.ERROR, e.getMessage(), ""), HttpStatus.BAD_REQUEST);
         }
     }
 }

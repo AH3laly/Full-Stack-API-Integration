@@ -1,7 +1,7 @@
 package com.neurogine.revenumonster.messages;
 
 public class AuthRequest {
-	private String grantType;
+    private String grantType;
     public AuthRequest(String grantType) {
         this.grantType = grantType;
     }
