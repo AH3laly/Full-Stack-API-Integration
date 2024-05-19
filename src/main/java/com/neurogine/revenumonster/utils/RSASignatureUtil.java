@@ -13,7 +13,7 @@ import org.bouncycastle.util.io.pem.PemReader;
 
 public class RSASignatureUtil {
 
-public static final String PRIVE_KEY_PATH = "";
+public static final String PRIVE_KEY_PATH = "/projects/keys/clientkey/private_key_rsa.pem";
 	
 	private static String sign(String data, PrivateKey privateKey) throws Exception {
         Signature rsaSignature = Signature.getInstance("SHA256withRSA");

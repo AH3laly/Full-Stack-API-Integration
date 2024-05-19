@@ -9,8 +9,8 @@ public class RevenumosterService {
 
 	public static final String AUTH_URL = "https://sb-oauth.revenuemonster.my/v1/token";
 	public static final String SERVICE_URL = "https://sb-open.revenuemonster.my/v3/wallet/topup";
-	public static final String CLIENT_ID = "";
-	public static final String CLIENT_SECRET = "";
+	public static final String CLIENT_ID = "1715948204793029959";
+	public static final String CLIENT_SECRET = "VpXJDNSAXhCMjvtYKigGjCDCHYXbRNUT";
 	
 	private static String accessToken;
 	private static String refreshToken;
