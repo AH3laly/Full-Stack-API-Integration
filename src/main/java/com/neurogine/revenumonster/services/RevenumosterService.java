@@ -3,14 +3,17 @@ package com.neurogine.revenumonster.services;
 import java.util.Base64;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.neurogine.revenumonster.properties.RevenumonsterProperties;
 import com.neurogine.revenumonster.utils.RSASignatureUtil;
 
+@Service
 public class RevenumosterService {
 
 	public static final String AUTH_URL = "https://sb-oauth.revenuemonster.my/v1/token";
 	public static final String SERVICE_URL = "https://sb-open.revenuemonster.my/v3/wallet/topup";
-	public static final String CLIENT_ID = "1715948204793029959";
-	public static final String CLIENT_SECRET = "VpXJDNSAXhCMjvtYKigGjCDCHYXbRNUT";
 	
 	private static String accessToken;
 	private static String refreshToken;
@@ -18,8 +21,11 @@ public class RevenumosterService {
 	private static String requestSignature;
 	private static Long timestamp;
 
-	public static String getAuthToken() {
-		String compactToken = CLIENT_ID + ":" + CLIENT_SECRET;
+	@Autowired
+	private RevenumonsterProperties properties;
+	
+	public String getAuthToken() {
+		String compactToken = properties.getClientId() + ":" + properties.getClientSecret();
 		return Base64.getEncoder().encodeToString(compactToken.getBytes()).toString();
 	}
 	

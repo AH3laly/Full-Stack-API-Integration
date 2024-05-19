@@ -1,5 +1,6 @@
 package com.neurogine.revenumonster.configurations;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,9 @@ import com.neurogine.revenumonster.services.RevenumosterService;
 @Configuration
 @EnableIntegration
 public class RevenumonsterServiceConfiguration {
+
+	@Autowired
+	RevenumosterService revenumosterService;
 
 	@MessagingGateway
 	public interface ApiGateway {
@@ -44,7 +48,7 @@ public class RevenumonsterServiceConfiguration {
         return IntegrationFlows.from("authChannel")
     		.enrichHeaders(header -> header
 				.header("Content-Type", "application/json")
-				.header("Authorization", "Basic " + RevenumosterService.getAuthToken()))
+				.header("Authorization", "Basic " + revenumosterService.getAuthToken()))
     		.handle(authenticate())
     		.channel("authenticateOutput")
             .get();
