@@ -69,7 +69,7 @@ public class RevenumonsterServiceConfiguration {
     public IntegrationFlow topupOutboundFlow() {
 
         return IntegrationFlows.from("topupChannel")
-        		.handle("configService", "configure")
+        		.handle("AuthService", "authenticateNewRequest")
         		.enrichHeaders(headerEnricherSpec -> headerEnricherSpec
     				 .header("Content-Type", "application/json")
 					 .headerFunction("Authorization", message -> "Bearer " + RevenumosterService.getAccessToken()) 
