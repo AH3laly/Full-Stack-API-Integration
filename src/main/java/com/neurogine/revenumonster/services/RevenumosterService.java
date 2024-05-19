@@ -19,8 +19,8 @@ public class RevenumosterService {
 	private static Long timestamp;
 
 	public static String getAuthToken() {
-		String compactToken = CLIENT_ID + " : " + CLIENT_SECRET;
-		return Base64.getEncoder().encode(compactToken.getBytes()).toString();
+		String compactToken = CLIENT_ID + ":" + CLIENT_SECRET;
+		return Base64.getEncoder().encodeToString(compactToken.getBytes()).toString();
 	}
 	
 	public static String getAccessToken() {
